@@ -92,16 +92,16 @@ EOF
     GRPC_PROXY_RUN="$WORK_DIR/caddy run --config $WORK_DIR/Caddyfile --watch"
     cat > $WORK_DIR/Caddyfile  << EOF
 
-@websocket_xray_vless {
-    path /vl
-    header Connection Upgrade
-    header Upgrade websocket
-  }
-reverse_proxy @websocket_xray_vless unix//etc/caddy/vl
-
 {
   http_port $CADDY_HTTP_PORT
 }
+
+@x_ws {
+    path /vl
+    header Connection *Upgrade*
+    header Upgrade websocket
+  }
+  reverse_proxy @x_ws 127.0.0.1:888
 
 :$GRPC_PROXY_PORT {
   reverse_proxy {
@@ -330,7 +330,7 @@ cat > $WORK_DIR/xconfig.json << EOF
 	},
 	"inbounds": [
     {
-      "listen": "/etc/caddy/vl","protocol": "vless",
+      "port": "888","protocol": "vless",
       "settings": {"clients": [{"id": "$UUID"}],"decryption": "none"},
       "streamSettings": {"network": "ws","wsSettings": {"path": "/vl"}}
     }
@@ -338,7 +338,7 @@ cat > $WORK_DIR/xconfig.json << EOF
 	"outbounds": [
     {
 			"protocol": "freedom",
-			"tag": "direct"
+      "settings": {}
 		}
 	]
 }
