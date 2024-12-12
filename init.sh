@@ -321,7 +321,7 @@ EOF
 
 fi
 
-mkdir -p /etc/caddy/ /usr/share/caddy
+mkdir -p /etc/caddy /usr/share/caddy
 cat > $WORK_DIR/xconfig.json << EOF
 {
 	"log": {
