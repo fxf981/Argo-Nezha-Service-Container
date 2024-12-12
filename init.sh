@@ -90,24 +90,10 @@ EOF
     CADDY_LATEST=$(wget -qO- "${GH_PROXY}https://api.github.com/repos/caddyserver/caddy/releases/latest" | awk -F [v\"] '/"tag_name"/{print $5}' || echo '2.7.6')
     wget -c ${GH_PROXY}https://github.com/caddyserver/caddy/releases/download/v${CADDY_LATEST}/caddy_${CADDY_LATEST}_linux_${ARCH}.tar.gz -qO- | tar xz -C $WORK_DIR caddy
     GRPC_PROXY_RUN="$WORK_DIR/caddy run --config $WORK_DIR/Caddyfile --watch"
-    MY_HASH=$($WORK_DIR/caddy hash-password --plaintext $UUID)
     cat > $WORK_DIR/Caddyfile  << EOF
 {
   http_port $CADDY_HTTP_PORT
 }
-
-# 配置基本身份验证，只保护特定路径，防止未授权访问
-basicauth /$UUID/* {
-    $UUID $MY_HASH                      # 使用 UUID 作为用户名，MY_HASH 作为加密后的密码
-}
-
-# Vless 协议的 WebSocket 路由配置
-@websocket_xray_vless {
-    header Connection *Upgrade*              # 同样匹配 WebSocket 请求
-    header Upgrade websocket
-    path /vl                       # 路径匹配 /vl
-}
-reverse_proxy @websocket_xray_vless unix//etc/caddy/vl  # 将请求代理到 Unix 套接字 /etc/caddy/vl
 
 :$GRPC_PROXY_PORT {
     reverse_proxy {
@@ -118,6 +104,13 @@ reverse_proxy @websocket_xray_vless unix//etc/caddy/vl  # 将请求代理到 Uni
     }
     tls $WORK_DIR/nezha.pem $WORK_DIR/nezha.key
 }
+
+@websocket_xray_vless {
+    header Connection Upgrade
+    header Upgrade websocket
+    path /vl
+}
+reverse_proxy @websocket_xray_vless unix//etc/caddy/vl
 EOF
   fi
 
