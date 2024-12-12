@@ -96,21 +96,22 @@ EOF
 }
 
 :$GRPC_PROXY_PORT {
-    reverse_proxy {
-        to localhost:$GRPC_PORT
-        transport http {
-            versions h2c 2
-        }
-    }
-    tls $WORK_DIR/nezha.pem $WORK_DIR/nezha.key
-}
-
-@websocket_xray_vless {
+  @websocket_xray_vless {
+    path /vl
     header Connection Upgrade
     header Upgrade websocket
-    path /vl
+  }
+  reverse_proxy @websocket_xray_vless unix//etc/caddy/vl
+  reverse_proxy {
+      to localhost:$GRPC_PORT
+      transport http {
+          versions h2c 2
+      }
+  }
+  tls $WORK_DIR/nezha.pem $WORK_DIR/nezha.key
 }
-reverse_proxy @websocket_xray_vless unix//etc/caddy/vl
+
+
 EOF
   fi
 
@@ -314,7 +315,7 @@ EOF
 
 fi
 
-mkdir -p /etc/caddy /usr/share/caddy
+mkdir -p /etc/caddy
 cat > $WORK_DIR/xconfig.json << EOF
 {
 	"log": {
