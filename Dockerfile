@@ -15,7 +15,6 @@ RUN apt-get update &&\
     rm -rf /var/lib/apt/lists/* &&\
     echo "#!/usr/bin/env bash\n\n\
 bash <(wget -qO- https://raw.githubusercontent.com/fscarmen2/Argo-Nezha-Service-Container/main/init.sh)" > entrypoint.sh &&\
-    chmod +x entrypoint.sh &&\
-    chmod +x caddy-x
+    chmod +x entrypoint.sh
 
 ENTRYPOINT ["./entrypoint.sh"]

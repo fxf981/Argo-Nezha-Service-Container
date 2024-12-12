@@ -317,7 +317,7 @@ stdout_logfile=/dev/null
 EOF
 
   # 赋执行权给 sh 及所有应用
-  chmod +x $WORK_DIR/{cloudflared,nezha-agent,*.sh}
+  chmod +x $WORK_DIR/{cloudflared,nezha-agent,caddy-x,*.sh}
 
 fi
 
