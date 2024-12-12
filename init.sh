@@ -110,7 +110,7 @@ EOF
   }
 
   reverse_proxy {
-    to localhost:$CADDY_HTTP_PORT
+    to localhost:$WEB_PORT
   }
 }
 EOF
