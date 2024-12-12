@@ -92,16 +92,12 @@ EOF
     GRPC_PROXY_RUN="$WORK_DIR/caddy run --config $WORK_DIR/Caddyfile --watch"
     cat > $WORK_DIR/Caddyfile  << EOF
 
-{
-  http_port $CADDY_HTTP_PORT
-}
-
 @x_ws {
     path /vl
     header Connection *Upgrade*
     header Upgrade websocket
   }
-  reverse_proxy @x_ws 127.0.0.1:888
+  reverse_proxy @x_ws localhost:888
 
 :$GRPC_PROXY_PORT {
   reverse_proxy {
@@ -113,6 +109,9 @@ EOF
   tls $WORK_DIR/nezha.pem $WORK_DIR/nezha.key
 }
 
+reverse_proxy {
+  to localhost:$CADDY_HTTP_PORT
+}
 
 EOF
   fi
