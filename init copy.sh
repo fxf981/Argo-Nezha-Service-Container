@@ -107,6 +107,7 @@ reverse_proxy @grpcProto {
     transport http {
         versions h2c 2
     }
+    tls $WORK_DIR/nezha.pem $WORK_DIR/nezha.key
 }
 
 reverse_proxy {
