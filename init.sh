@@ -99,15 +99,14 @@ EOF
     }
     reverse_proxy @x_ws localhost:888
 
-  @grpcProto {
-    path /proto.NezhaService/*
-  }
-  reverse_proxy @grpcProto {
-      to localhost:$GRPC_PORT
-      transport http {
-          versions h2c 2
-      }
-      tls $WORK_DIR/nezha.pem $WORK_DIR/nezha.key
+  :$GRPC_PROXY_PORT {
+    reverse_proxy {
+        to localhost:$GRPC_PORT
+        transport http {
+            versions h2c 2
+        }
+    }
+    tls $WORK_DIR/nezha.pem $WORK_DIR/nezha.key
   }
 
   reverse_proxy {
