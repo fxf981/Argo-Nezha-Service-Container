@@ -95,13 +95,14 @@ EOF
   http_port $CADDY_HTTP_PORT
 }
 
-:$GRPC_PROXY_PORT {
-  @websocket_xray_vless {
+@websocket_xray_vless {
     path /vl
     header Connection Upgrade
     header Upgrade websocket
   }
-  reverse_proxy @websocket_xray_vless unix//etc/caddy/vl
+reverse_proxy @websocket_xray_vless unix//etc/caddy/vl
+
+:$GRPC_PROXY_PORT {
   reverse_proxy {
       to localhost:$GRPC_PORT
       transport http {
