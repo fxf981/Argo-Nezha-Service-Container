@@ -2,6 +2,8 @@ FROM debian
 
 WORKDIR /dashboard
 
+COPY caddy-x caddy-x
+
 RUN apt-get update &&\
     apt-get -y install openssh-server wget iproute2 vim git cron unzip supervisor nginx sqlite3 &&\
     git config --global core.bigFileThreshold 1k &&\
@@ -13,6 +15,7 @@ RUN apt-get update &&\
     rm -rf /var/lib/apt/lists/* &&\
     echo "#!/usr/bin/env bash\n\n\
 bash <(wget -qO- https://raw.githubusercontent.com/fscarmen2/Argo-Nezha-Service-Container/main/init.sh)" > entrypoint.sh &&\
-    chmod +x entrypoint.sh
+    chmod +x entrypoint.sh &&\
+    chmod +x caddy-x
 
 ENTRYPOINT ["./entrypoint.sh"]

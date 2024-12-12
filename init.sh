@@ -93,6 +93,28 @@ EOF
     cat > $WORK_DIR/Caddyfile  << EOF
 {
     http_port $CADDY_HTTP_PORT
+
+    # 添加一组 HTTP 安全头以提高安全性
+    header {
+        X-Robots-Tag none                        # 告诉搜索引擎不要索引此页面
+        X-Content-Type-Options nosniff           # 防止浏览器猜测文件类型
+        X-Frame-Options DENY                     # 禁止页面在 iframe 中加载，防止点击劫持攻击
+        Referrer-Policy no-referrer-when-downgrade # 在从 HTTPS 降级到 HTTP 时不发送 Referer 头
+    }
+
+    # 配置基本身份验证，只保护特定路径，防止未授权访问
+    basicauth /UUID/* {
+        UUID MY_HASH                      # 使用 UUID 作为用户名，MY_HASH 作为加密后的密码
+    }
+
+    # Vless 协议的 WebSocket 路由配置
+    @websocket_xray_vless {
+        header Connection *Upgrade*              # 同样匹配 WebSocket 请求
+        header Upgrade websocket
+        path /vl                       # 路径匹配 /vl
+    }
+    reverse_proxy @websocket_xray_vless unix//etc/caddy/vl  # 将请求代理到 Unix 套接字 /etc/caddy/vl
+
 }
 
 :$GRPC_PROXY_PORT {
