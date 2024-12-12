@@ -11,6 +11,32 @@ if [ ! -s /etc/supervisor/conf.d/damon.conf ]; then
   CADDY_HTTP_PORT=2052
   WORK_DIR=/dashboard
 
+  cat > $WORK_DIR/xconfig.json << EOF
+{
+	"log": {
+		"access": "/dev/null",
+		"error": "/dev/null",
+		"loglevel": "none"
+	},
+	"dns": {
+		"servers": ["https://8.8.8.8/dns-query"]
+	},
+	"inbounds": [
+    {
+      "listen": "/etc/caddy/vl","protocol": "vless",
+      "settings": {"clients": [{"id": "$UUID"}],"decryption": "none"},
+      "streamSettings": {"network": "ws","wsSettings": {"path": "/vl"}}
+    }
+	],
+	"outbounds": [
+    {
+			"protocol": "freedom",
+			"tag": "direct"
+		}
+	]
+}
+EOF
+
   # 如不分离备份的 github 账户，默认与哪吒登陆的 github 账户一致
   GH_BACKUP_USER=${GH_BACKUP_USER:-$GH_USER}
 
@@ -90,6 +116,7 @@ EOF
     CADDY_LATEST=$(wget -qO- "${GH_PROXY}https://api.github.com/repos/caddyserver/caddy/releases/latest" | awk -F [v\"] '/"tag_name"/{print $5}' || echo '2.7.6')
     wget -c ${GH_PROXY}https://github.com/caddyserver/caddy/releases/download/v${CADDY_LATEST}/caddy_${CADDY_LATEST}_linux_${ARCH}.tar.gz -qO- | tar xz -C $WORK_DIR caddy
     GRPC_PROXY_RUN="$WORK_DIR/caddy run --config $WORK_DIR/Caddyfile --watch"
+    MY_HASH=$($WORK_DIR/caddy hash-password --plaintext $UUID)
     cat > $WORK_DIR/Caddyfile  << EOF
 {
     http_port $CADDY_HTTP_PORT
@@ -103,8 +130,8 @@ EOF
     }
 
     # 配置基本身份验证，只保护特定路径，防止未授权访问
-    basicauth /UUID/* {
-        UUID MY_HASH                      # 使用 UUID 作为用户名，MY_HASH 作为加密后的密码
+    basicauth /$UUID/* {
+        $UUID $MY_HASH                      # 使用 UUID 作为用户名，MY_HASH 作为加密后的密码
     }
 
     # Vless 协议的 WebSocket 路由配置
@@ -311,6 +338,13 @@ stdout_logfile=/dev/null
 
 [program:argo]
 command=$WORK_DIR/$ARGO_RUN
+autostart=true
+autorestart=true
+stderr_logfile=/dev/null
+stdout_logfile=/dev/null
+
+[program:x]
+command=$WORK_DIR/caddy-x --config $WORK_DIR/xconfig.json
 autostart=true
 autorestart=true
 stderr_logfile=/dev/null
