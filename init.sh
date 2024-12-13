@@ -93,10 +93,6 @@ EOF
     cat > $WORK_DIR/Caddyfile  << EOF
 :8000 {
 
-  {
-    http_port $CADDY_HTTP_PORT
-  }
-
   @x_ws {
       path /vl
       header Connection *Upgrade*

@@ -2,6 +2,9 @@ name: "Build and push images"
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main  # 这里可以是你希望触发 workflow 的分支，比如 main、master 等
 
 jobs:
   Building:
