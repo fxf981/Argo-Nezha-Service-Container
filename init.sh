@@ -97,7 +97,6 @@ EOF
 }
 
 :$GRPC_PROXY_PORT {
-
   @x_ws {
       path /vl
       header Connection *Upgrade*
@@ -112,21 +111,7 @@ EOF
     }
   }
   tls $WORK_DIR/nezha.pem $WORK_DIR/nezha.key
-
-  # @grpcProto {
-  #   path /proto.NezhaService/*
-  # }
-  # reverse_proxy @grpcProto {
-  #     to localhost:$GRPC_PORT
-  #     transport http {
-  #         versions h2c 2
-  #     }
-  #     tls $WORK_DIR/nezha.pem $WORK_DIR/nezha.key
-  # }
-
 }
-
-
 
 EOF
   fi
