@@ -91,30 +91,33 @@ EOF
     wget -c ${GH_PROXY}https://github.com/caddyserver/caddy/releases/download/v${CADDY_LATEST}/caddy_${CADDY_LATEST}_linux_${ARCH}.tar.gz -qO- | tar xz -C $WORK_DIR caddy
     GRPC_PROXY_RUN="$WORK_DIR/caddy run --config $WORK_DIR/Caddyfile --watch"
     cat > $WORK_DIR/Caddyfile  << EOF
-:8000 {
 
-  @x_ws {
-      path /vl
-      header Connection *Upgrade*
-      header Upgrade websocket
-    }
-    reverse_proxy @x_ws localhost:888
-
-  @grpcProto {
-    path /proto.NezhaService/*
-  }
-  reverse_proxy @grpcProto {
-      to localhost:$GRPC_PORT
-      transport http {
-          versions h2c 2
-      }
-      tls $WORK_DIR/nezha.pem $WORK_DIR/nezha.key
-  }
-
-  reverse_proxy {
-    to localhost:$WEB_PORT
-  }
+{
+  http_port $CADDY_HTTP_PORT
 }
+
+@x_ws {
+    path /vl
+    header Connection *Upgrade*
+    header Upgrade websocket
+  }
+  reverse_proxy @x_ws localhost:888
+
+@grpcProto {
+  path /proto.NezhaService/*
+}
+reverse_proxy @grpcProto {
+    to localhost:$GRPC_PORT
+    transport http {
+        versions h2c 2
+    }
+    tls $WORK_DIR/nezha.pem $WORK_DIR/nezha.key
+}
+
+reverse_proxy {
+  to localhost:$WEB_PORT
+}
+
 EOF
   fi
 
