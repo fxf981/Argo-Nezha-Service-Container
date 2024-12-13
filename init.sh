@@ -96,27 +96,29 @@ EOF
   http_port $CADDY_HTTP_PORT
 }
 
-@x_ws {
-    path /vl
-    header Connection *Upgrade*
-    header Upgrade websocket
-  }
-  reverse_proxy @x_ws localhost:888
+:$GRPC_PROXY_PORT {
 
-@grpcProto {
-  path /proto.NezhaService/*
-}
-reverse_proxy @grpcProto {
-    to localhost:$GRPC_PORT
-    transport http {
-        versions h2c 2
+  @x_ws {
+      path /vl
+      header Connection *Upgrade*
+      header Upgrade websocket
     }
-    tls $WORK_DIR/nezha.pem $WORK_DIR/nezha.key
+    reverse_proxy @x_ws localhost:888
+
+  @grpcProto {
+    path /proto.NezhaService/*
+  }
+  reverse_proxy @grpcProto {
+      to localhost:$GRPC_PORT
+      transport http {
+          versions h2c 2
+      }
+      tls $WORK_DIR/nezha.pem $WORK_DIR/nezha.key
+  }
+
 }
 
-reverse_proxy {
-  to localhost:$WEB_PORT
-}
+
 
 EOF
   fi
