@@ -103,18 +103,26 @@ EOF
       header Connection *Upgrade*
       header Upgrade websocket
     }
-    reverse_proxy @x_ws localhost:888
+  reverse_proxy @x_ws localhost:888
 
-  @grpcProto {
-    path /proto.NezhaService/*
+  reverse_proxy {
+    to localhost:$GRPC_PORT
+    transport http {
+        versions h2c 2
+    }
   }
-  reverse_proxy @grpcProto {
-      to localhost:$GRPC_PORT
-      transport http {
-          versions h2c 2
-      }
-      tls $WORK_DIR/nezha.pem $WORK_DIR/nezha.key
-  }
+  tls $WORK_DIR/nezha.pem $WORK_DIR/nezha.key
+
+  # @grpcProto {
+  #   path /proto.NezhaService/*
+  # }
+  # reverse_proxy @grpcProto {
+  #     to localhost:$GRPC_PORT
+  #     transport http {
+  #         versions h2c 2
+  #     }
+  #     tls $WORK_DIR/nezha.pem $WORK_DIR/nezha.key
+  # }
 
 }
 
