@@ -96,15 +96,6 @@ EOF
   http_port $CADDY_HTTP_PORT
 }
 
-:8000 {
-  @x_ws {
-      path /vl
-      header Connection *Upgrade*
-      header Upgrade websocket
-    }
-  reverse_proxy @x_ws localhost:888
-}
-
 :$GRPC_PROXY_PORT {
   reverse_proxy {
     to localhost:$GRPC_PORT
