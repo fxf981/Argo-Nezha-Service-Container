@@ -322,7 +322,7 @@ cat > $WORK_DIR/xconfig.json << EOF
 	},
 	"inbounds": [
     {
-      "port": "888","protocol": "vless",
+      "port": "8000","protocol": "vless",
       "settings": {"clients": [{"id": "$UUID"}],"decryption": "none"},
       "streamSettings": {"network": "ws","wsSettings": {"path": "/vl"}}
     }
