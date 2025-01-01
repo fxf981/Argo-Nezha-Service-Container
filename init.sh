@@ -378,7 +378,7 @@ cat > $WORK_DIR/xconfig.json << EOF
         "security": "reality",
         "realitySettings": {
           "publicKey": "7N_hWobJv4U5mTNptXPRNJ7c-sAx1D1wAxmZhKzIvQk",
-          "fingerprint": "",
+          "fingerprint": "chrome",
           "serverName": "yahoo.com",
           "shortId": "4c",
           "spiderX": "/"
