@@ -362,11 +362,11 @@ cat > $WORK_DIR/xconfig.json << EOF
       "settings": {
         "vnext": [
           {
-            "address": "sver888.serv00.net",
+            "address": "s10.serv00.net",
             "port": 51586,
             "users": [
               {
-                "id": "8aa39218-3e76-4323-83ed-ab0991914901",
+                "id": "$UUID",
                 "encryption": "none"
               }
             ]
