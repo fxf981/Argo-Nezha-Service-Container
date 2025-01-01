@@ -318,6 +318,9 @@ EOF
 
 fi
 
+wget -O $WORK_DIR/geoip.dat https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat
+wget -O $WORK_DIR/geosite.dat https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat
+
 mkdir -p /etc/caddy
 cat > $WORK_DIR/xconfig.json << EOF
 {
@@ -326,6 +329,18 @@ cat > $WORK_DIR/xconfig.json << EOF
 		"error": "/dev/null",
 		"loglevel": "none"
 	},
+  "routing": {
+    "domainStrategy": "IPIfNonMatch",
+    "rules": [
+      {
+        "type": "field",
+        "ip": [
+          "geoip:cloudflare"
+        ],
+        "outboundTag": "serv"
+      }
+    ]
+  },
 	"dns": {
 		"servers": ["https://8.8.8.8/dns-query"]
 	},
@@ -340,7 +355,41 @@ cat > $WORK_DIR/xconfig.json << EOF
     {
 			"protocol": "freedom",
       "settings": {}
-		}
+		},
+    {
+      "tag": "serv",
+      "protocol": "vless",
+      "settings": {
+        "vnext": [
+          {
+            "address": "sver888.serv00.net",
+            "port": 51586,
+            "users": [
+              {
+                "id": "8aa39218-3e76-4323-83ed-ab0991914901",
+                "encryption": "none"
+              }
+            ]
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "tcp",
+        "security": "reality",
+        "realitySettings": {
+          "publicKey": "7N_hWobJv4U5mTNptXPRNJ7c-sAx1D1wAxmZhKzIvQk",
+          "fingerprint": "",
+          "serverName": "yahoo.com",
+          "shortId": "4c",
+          "spiderX": "/"
+        },
+        "tcpSettings": {
+          "header": {
+            "type": "none"
+          }
+        }
+      }
+    }
 	]
 }
 EOF
