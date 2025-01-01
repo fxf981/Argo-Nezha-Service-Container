@@ -337,7 +337,7 @@ cat > $WORK_DIR/xconfig.json << EOF
         "ip": [
           "geoip:cloudflare"
         ],
-        "outboundTag": "serv"
+        "outboundTag": "s0"
       }
     ]
   },
@@ -357,16 +357,16 @@ cat > $WORK_DIR/xconfig.json << EOF
       "settings": {}
 		},
     {
-      "tag": "serv",
+      "tag": "s0",
       "protocol": "vless",
       "settings": {
         "vnext": [
           {
-            "address": "s10.serv00.net",
-            "port": 51586,
+            "address": "pclwgdwv.serv00.net",
+            "port": 443,
             "users": [
               {
-                "id": "$UUID",
+                "id": "d342d11e-d424-4583-b36e-524ab1f0afa4",
                 "encryption": "none"
               }
             ]
@@ -374,19 +374,18 @@ cat > $WORK_DIR/xconfig.json << EOF
         ]
       },
       "streamSettings": {
-        "network": "tcp",
-        "security": "reality",
-        "realitySettings": {
-          "publicKey": "7N_hWobJv4U5mTNptXPRNJ7c-sAx1D1wAxmZhKzIvQk",
+        "network": "ws",
+        "security": "tls",
+        "tlsSettings": {
+          "serverName": "pclwgdwv.serv00.net",
+          "alpn": [],
           "fingerprint": "chrome",
-          "serverName": "yahoo.com",
-          "shortId": "4c",
-          "spiderX": "/"
+          "allowInsecure": false
         },
-        "tcpSettings": {
-          "header": {
-            "type": "none"
-          }
+        "wsSettings": {
+          "path": "/?ed=2048",
+          "host": "pclwgdwv.serv00.net",
+          "heartbeatPeriod": 0
         }
       }
     }
