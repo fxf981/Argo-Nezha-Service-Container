@@ -346,65 +346,19 @@ cat > $WORK_DIR/xconfig.json << EOF
 	},
 	"inbounds": [
     {
-      "port": "888","protocol": "vless",
-      "settings": {"clients": [{"id": "$UUID"}],"decryption": "none"},
-      "streamSettings": {"network": "ws","wsSettings": {"path": "/vl"}}
-    },
-    {
-      "listen": null,
-      "port": 24808,
+      "port": "888",
       "protocol": "vless",
       "settings": {
-        "clients": [
-          {
-            "email": "iwagezpm",
-            "flow": "",
-            "id": "$UUID"
-          }
-        ],
-        "decryption": "none",
-        "fallbacks": []
+        "clients": [{
+          "id": "$UUID"
+        }],
+        "decryption": "none"
       },
       "streamSettings": {
-        "network": "tcp",
-        "security": "none",
-        "tcpSettings": {
-          "acceptProxyProtocol": false,
-          "header": {
-            "request": {
-              "headers": {},
-              "method": "GET",
-              "path": [
-                "/vltcp"
-              ],
-              "version": "1.1"
-            },
-            "response": {
-              "headers": {},
-              "reason": "OK",
-              "status": "200",
-              "version": "1.1"
-            },
-            "type": "http"
-          }
+        "network": "ws",
+        "wsSettings": {
+          "path": "/vl"
         }
-      },
-      "tag": "inbound-24808",
-      "sniffing": {
-        "enabled": false,
-        "destOverride": [
-          "http",
-          "tls",
-          "quic",
-          "fakedns"
-        ],
-        "metadataOnly": false,
-        "routeOnly": false
-      },
-      "allocate": {
-        "strategy": "always",
-        "refresh": 5,
-        "concurrency": 3
       }
     }
 	],
