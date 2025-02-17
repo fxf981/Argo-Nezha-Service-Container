@@ -99,20 +99,16 @@ EOF
 :$GRPC_PROXY_PORT {
   tls $WORK_DIR/nezha.pem $WORK_DIR/nezha.key
 
-  # 优先处理 /vl 路径，并保留路径不变
-  handle /vl* {
-    reverse_proxy localhost:888
-  }
-
-  # 其他路径的配置
-  handle {
-    reverse_proxy {
-      to localhost:$GRPC_PORT
-      transport http {
-        versions h2c 2
-      }
+  reverse_proxy {
+    to localhost:$GRPC_PORT
+    transport http {
+      versions h2c 2
     }
   }
+}
+
+:888 {
+  reverse_proxy localhost:888
 }
 
 
