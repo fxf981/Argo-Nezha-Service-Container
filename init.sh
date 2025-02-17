@@ -60,30 +60,47 @@ user www-data;
 worker_processes auto;
 pid /run/nginx.pid;
 include /etc/nginx/modules-enabled/*.conf;
+
 events {
-        worker_connections 768;
-        # multi_accept on;
+    worker_connections 768;
+    # multi_accept on;
 }
+
 http {
-  upstream grpcservers {
-    server localhost:$GRPC_PORT;
-    keepalive 1024;
-  }
-  server {
-    listen 127.0.0.1:$GRPC_PROXY_PORT ssl http2;
-    server_name $ARGO_DOMAIN;
-    ssl_certificate          $WORK_DIR/nezha.pem;
-    ssl_certificate_key      $WORK_DIR/nezha.key;
-    underscores_in_headers on;
-    location / {
-      grpc_read_timeout 300s;
-      grpc_send_timeout 300s;
-      grpc_socket_keepalive on;
-      grpc_pass grpc://grpcservers;
+    upstream grpcservers {
+        server localhost:$GRPC_PORT;
+        keepalive 1024;
     }
-    access_log  /dev/null;
-    error_log   /dev/null;
-  }
+
+    server {
+        listen 127.0.0.1:$GRPC_PROXY_PORT ssl http2;
+        server_name $ARGO_DOMAIN;
+
+        ssl_certificate          $WORK_DIR/nezha.pem;
+        ssl_certificate_key      $WORK_DIR/nezha.key;
+
+        underscores_in_headers on;
+
+        # 优先监听 /vl 路径并重定向到8000端口
+        location /vl {
+            proxy_pass http://localhost:8000;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+        # 其他请求继续使用gRPC
+        location / {
+            grpc_read_timeout 300s;
+            grpc_send_timeout 300s;
+            grpc_socket_keepalive on;
+            grpc_pass grpc://grpcservers;
+        }
+
+        access_log  /dev/null;
+        error_log   /dev/null;
+    }
 }
 EOF
   else
