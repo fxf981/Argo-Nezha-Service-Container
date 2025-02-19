@@ -107,11 +107,6 @@ EOF
   }
 }
 
-:888 {
-  reverse_proxy localhost:888
-}
-
-
 EOF
   fi
 
