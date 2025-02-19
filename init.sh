@@ -325,19 +325,7 @@ cat > $WORK_DIR/xconfig.json << EOF
 		"access": "/dev/null",
 		"error": "/dev/null",
 		"loglevel": "none"
-	},
-  "routing": {
-    "domainStrategy": "IPIfNonMatch",
-    "rules": [
-      {
-        "type": "field",
-        "ip": [
-          "geoip:cloudflare"
-        ],
-        "outboundTag": "s0"
-      }
-    ]
-  },
+	}
 	"dns": {
 		"servers": ["https://8.8.8.8/dns-query"]
 	},
@@ -363,40 +351,7 @@ cat > $WORK_DIR/xconfig.json << EOF
     {
 			"protocol": "freedom",
       "settings": {}
-		},
-    {
-      "tag": "s0",
-      "protocol": "vless",
-      "settings": {
-        "vnext": [
-          {
-            "address": "pclwgdwv.serv00.net",
-            "port": 443,
-            "users": [
-              {
-                "id": "d342d11e-d424-4583-b36e-524ab1f0afa4",
-                "encryption": "none"
-              }
-            ]
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "ws",
-        "security": "tls",
-        "tlsSettings": {
-          "serverName": "pclwgdwv.serv00.net",
-          "alpn": [],
-          "fingerprint": "chrome",
-          "allowInsecure": false
-        },
-        "wsSettings": {
-          "path": "/?ed=2048",
-          "host": "pclwgdwv.serv00.net",
-          "heartbeatPeriod": 0
-        }
-      }
-    }
+		}
 	]
 }
 EOF
