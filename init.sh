@@ -320,7 +320,7 @@ cat > $WORK_DIR/xconfig.json << EOF
 		"access": "/dev/null",
 		"error": "/dev/null",
 		"loglevel": "none"
-	}
+	},
 	"dns": {
 		"servers": ["https://8.8.8.8/dns-query"]
 	},
