@@ -345,19 +345,25 @@ cat > $WORK_DIR/xconfig.json << EOF
       "port": "8888",
       "protocol": "vless",
       "settings": {
-        "clients": [{
-          "id": "$UUID"
-        }],
-        "decryption": "none",
-        "fallbacks": [
+        "clients": [
           {
-            "dest": 80
+            "id": "$UUID",
+            "flow": "xtls-rprx-vision"
           }
-        ]
+        ],
+        "decryption": "none"
       },
       "streamSettings": {
-        "network": "tcp"
-      }
+        "network": "h2",
+        "httpSettings": {
+          "path": "/xh2"
+        }
+      },
+      "fallbacks": [
+        {
+          "dest": 80
+        }
+      ]
     }
 	],
 	"outbounds": [
