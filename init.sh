@@ -348,7 +348,12 @@ cat > $WORK_DIR/xconfig.json << EOF
         "clients": [{
           "id": "$UUID"
         }],
-        "decryption": "none"
+        "decryption": "none",
+        "fallbacks": [
+          {
+            "dest": 80
+          }
+        ]
       },
       "streamSettings": {
         "network": "tcp"
@@ -358,7 +363,7 @@ cat > $WORK_DIR/xconfig.json << EOF
 	"outbounds": [
     {
 			"protocol": "freedom",
-      "settings": {}
+      "tag": "direct"
 		}
 	]
 }
