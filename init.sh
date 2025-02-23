@@ -335,10 +335,7 @@ cat > $WORK_DIR/xconfig.json << EOF
         "decryption": "none"
       },
       "streamSettings": {
-        "network": "ws",
-        "wsSettings": {
-          "path": "/vl"
-        }
+        "network": "tcp"
       }
     }
 	],
