@@ -345,6 +345,12 @@ cat > $WORK_DIR/xconfig.json << EOF
       "port": "8888",
       "protocol": "http",
       "settings": {
+        "accounts": [
+          {
+            "user": "ko123",
+            "pass": "ko123"
+          }
+        ],
         "allowTransparent": false
       },
       "streamSettings": {
