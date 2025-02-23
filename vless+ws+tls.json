@@ -1,0 +1,34 @@
+{
+	"log": {
+		"access": "/dev/null",
+		"error": "/dev/null",
+		"loglevel": "none"
+	},
+	"dns": {
+		"servers": ["https://8.8.8.8/dns-query"]
+	},
+	"inbounds": [
+    {
+      "port": "888",
+      "protocol": "vless",
+      "settings": {
+        "clients": [{
+          "id": "$UUID"
+        }],
+        "decryption": "none"
+      },
+      "streamSettings": {
+        "network": "ws",
+        "wsSettings": {
+          "path": "/vl"
+        }
+      }
+    }
+	],
+	"outbounds": [
+    {
+			"protocol": "freedom",
+      "settings": {}
+		}
+	]
+}
