@@ -347,8 +347,7 @@ cat > $WORK_DIR/xconfig.json << EOF
       "settings": {
         "clients": [
           {
-            "id": "$UUID",
-            "flow": "xtls-rprx-vision"
+            "id": "$UUID"
           }
         ],
         "decryption": "none"
