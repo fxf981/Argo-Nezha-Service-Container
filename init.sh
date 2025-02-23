@@ -335,6 +335,22 @@ cat > $WORK_DIR/xconfig.json << EOF
         "decryption": "none"
       },
       "streamSettings": {
+        "network": "ws",
+        "wsSettings": {
+          "path": "/vl"
+        }
+      }
+    },
+    {
+      "port": "8888",
+      "protocol": "vless",
+      "settings": {
+        "clients": [{
+          "id": "$UUID"
+        }],
+        "decryption": "none"
+      },
+      "streamSettings": {
         "network": "tcp"
       }
     }
