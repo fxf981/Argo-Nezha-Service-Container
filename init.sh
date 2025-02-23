@@ -343,23 +343,13 @@ cat > $WORK_DIR/xconfig.json << EOF
     },
     {
       "port": "8888",
-      "protocol": "vless",
+      "protocol": "http",
       "settings": {
-        "clients": [
-          {
-            "id": "$UUID"
-          }
-        ],
-        "decryption": "none"
+        "allowTransparent": false
       },
       "streamSettings": {
-        "network": "h2"
-      },
-      "fallbacks": [
-        {
-          "dest": 80
-        }
-      ]
+        "network": "tcp"
+      }
     }
 	],
 	"outbounds": [
