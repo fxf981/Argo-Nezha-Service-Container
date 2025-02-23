@@ -353,10 +353,7 @@ cat > $WORK_DIR/xconfig.json << EOF
         "decryption": "none"
       },
       "streamSettings": {
-        "network": "h2",
-        "httpSettings": {
-          "path": "/xh2"
-        }
+        "network": "h2"
       },
       "fallbacks": [
         {
