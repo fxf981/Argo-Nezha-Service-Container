@@ -310,8 +310,8 @@ EOF
 
 fi
 
-wget -O $WORK_DIR/geoip.dat https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat
-wget -O $WORK_DIR/geosite.dat https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat
+# wget -O $WORK_DIR/geoip.dat https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat
+# wget -O $WORK_DIR/geosite.dat https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat
 
 mkdir -p /etc/caddy
 cat > $WORK_DIR/xconfig.json << EOF
