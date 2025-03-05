@@ -5,7 +5,7 @@ WORKDIR /dashboard
 COPY caddy-x caddy-x
 
 RUN apt-get update &&\
-    apt-get -y install openssh-server wget iproute2 vim git cron unzip supervisor nginx sqlite3 curl net-tools &&\
+    apt-get -y install openssh-server wget iproute2 vim git cron unzip supervisor nginx sqlite3 curl net-tools htop btop &&\
     git config --global core.bigFileThreshold 1k &&\
     git config --global core.compression 0 &&\
     git config --global advice.detachedHead false &&\
