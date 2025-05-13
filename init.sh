@@ -316,38 +316,74 @@ fi
 mkdir -p /etc/caddy
 cat > $WORK_DIR/xconfig.json << EOF
 {
-	"log": {
+  "log": {
 		"access": "/dev/null",
 		"error": "/dev/null",
 		"loglevel": "none"
 	},
-	"dns": {
-		"servers": ["https://8.8.8.8/dns-query"]
-	},
-	"inbounds": [
+  "dns": {
+    "queryStrategy": "UseIP",
+    "servers": [
+      "https://8.8.8.8/dns-query"
+    ],
+    "tag": "dns_inbound"
+  },
+  "inbounds": [
     {
-      "port": "888",
+      "allocate": {
+        "concurrency": 3,
+        "refresh": 5,
+        "strategy": "always"
+      },
+      "listen": null,
+      "port": 888,
       "protocol": "vless",
       "settings": {
-        "clients": [{
-          "id": "$UUID"
-        }],
-        "decryption": "none"
+        "clients": [
+          {
+            "email": "rh8advaz",
+            "flow": "",
+            "id": "$UUID"
+          }
+        ],
+        "decryption": "none",
+        "fallbacks": []
+      },
+      "sniffing": {
+        "destOverride": [
+          "http",
+          "tls",
+          "quic",
+          "fakedns"
+        ],
+        "enabled": false,
+        "metadataOnly": false,
+        "routeOnly": false
       },
       "streamSettings": {
-        "network": "ws",
-        "wsSettings": {
-          "path": "/vl"
+        "network": "xhttp",
+        "security": "none",
+        "xhttpSettings": {
+          "headers": {},
+          "host": "",
+          "mode": "auto",
+          "noSSEHeader": false,
+          "path": "/vl",
+          "scMaxBufferedPosts": 30,
+          "scMaxEachPostBytes": "1000000",
+          "scStreamUpServerSecs": "20-80",
+          "xPaddingBytes": "100-1000"
         }
-      }
+      },
+      "tag": "inbound-888"
     }
-	],
-	"outbounds": [
+  ],
+  "outbounds": [
     {
-			"protocol": "freedom",
+      "protocol": "freedom",
       "tag": "direct"
-		}
-	]
+    }
+  ]
 }
 EOF
 

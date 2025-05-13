@@ -1,0 +1,70 @@
+{
+  "log": {
+		"access": "/dev/null",
+		"error": "/dev/null",
+		"loglevel": "none"
+	},
+  "dns": {
+    "queryStrategy": "UseIP",
+    "servers": [
+      "https://8.8.8.8/dns-query"
+    ],
+    "tag": "dns_inbound"
+  },
+  "inbounds": [
+    {
+      "allocate": {
+        "concurrency": 3,
+        "refresh": 5,
+        "strategy": "always"
+      },
+      "listen": null,
+      "port": 888,
+      "protocol": "vless",
+      "settings": {
+        "clients": [
+          {
+            "email": "rh8advaz",
+            "flow": "",
+            "id": "d56c112c-56f4-4b19-aab6-3122830767f5"
+          }
+        ],
+        "decryption": "none",
+        "fallbacks": []
+      },
+      "sniffing": {
+        "destOverride": [
+          "http",
+          "tls",
+          "quic",
+          "fakedns"
+        ],
+        "enabled": false,
+        "metadataOnly": false,
+        "routeOnly": false
+      },
+      "streamSettings": {
+        "network": "xhttp",
+        "security": "none",
+        "xhttpSettings": {
+          "headers": {},
+          "host": "",
+          "mode": "auto",
+          "noSSEHeader": false,
+          "path": "/vl",
+          "scMaxBufferedPosts": 30,
+          "scMaxEachPostBytes": "1000000",
+          "scStreamUpServerSecs": "20-80",
+          "xPaddingBytes": "100-1000"
+        }
+      },
+      "tag": "inbound-888"
+    }
+  ],
+  "outbounds": [
+    {
+      "protocol": "freedom",
+      "tag": "direct"
+    }
+  ]
+}
