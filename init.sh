@@ -96,14 +96,14 @@ EOF
   http_port $CADDY_HTTP_PORT
 }
 
-:$GRPC_PROXY_PORT {
-  tls $WORK_DIR/nezha.pem $WORK_DIR/nezha.key
-
-  # 优先处理 /vl 路径，反代到 127.0.0.1:888
+:8080 {
   handle_path /vl* {
     reverse_proxy 127.0.0.1:888
   }
+}
 
+:$GRPC_PROXY_PORT {
+  tls $WORK_DIR/nezha.pem $WORK_DIR/nezha.key
   reverse_proxy {
     to localhost:$GRPC_PORT
     transport http {
@@ -340,7 +340,7 @@ cat > $WORK_DIR/xconfig.json << EOF
         "refresh": 5,
         "strategy": "always"
       },
-      "listen": null,
+      "listen": 0.0.0.0,
       "port": 888,
       "protocol": "vless",
       "settings": {
