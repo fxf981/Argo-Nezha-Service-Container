@@ -94,6 +94,16 @@ EOF
 {
   http_port $CADDY_HTTP_PORT
 }
+:888 {
+    @websocket {
+        header Connection *Upgrade*
+        header Upgrade websocket
+        path /vl
+    }
+    reverse_proxy @websocket unix//etc/caddy/vl
+
+    reverse_proxy localhost:$WEB_PORT
+}
 :$GRPC_PROXY_PORT {
   tls $WORK_DIR/nezha.pem $WORK_DIR/nezha.key
   reverse_proxy {
@@ -326,48 +336,9 @@ cat > $WORK_DIR/xconfig.json << EOF
   },
   "inbounds": [
     {
-      "listen": "0.0.0.0",
-      "port": 888,
-      "protocol": "vless",
-      "settings": {
-        "clients": [
-          {
-            "email": "1u7rp5oj",
-            "flow": "",
-            "id": "$UUID"
-          }
-        ],
-        "decryption": "none",
-        "fallbacks": [
-          {
-            "dest": "127.0.0.1:$WEB_PORT",
-            "xver": 1
-          }
-        ]
-      },
-      "sniffing": {
-        "destOverride": [
-          "http",
-          "tls",
-          "quic",
-          "fakedns"
-        ],
-        "enabled": true,
-        "metadataOnly": false,
-        "routeOnly": false
-      },
-      "streamSettings": {
-        "network": "ws",
-        "security": "none",
-        "wsSettings": {
-          "acceptProxyProtocol": false,
-          "headers": {},
-          "heartbeatPeriod": 0,
-          "host": "",
-          "path": "/vl"
-        }
-      },
-      "tag": "inbound-888"
+      "listen": "/etc/caddy/vl","protocol": "vless",
+      "settings": {"clients": [{"id": "$UUID"}],"decryption": "none"},
+      "streamSettings": {"network": "ws","wsSettings": {"path": "/vl"}}
     }
   ],
   "outbounds": [
