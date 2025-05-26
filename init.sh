@@ -4,7 +4,7 @@
 if [ ! -s /etc/supervisor/conf.d/damon.conf ]; then
 
   # 设置 Github CDN 及若干变量，如是 IPv6 only 或者大陆机器，需要 Github 加速网，可自行查找放在 GH_PROXY 处 ，如 https://ghproxy.lvedong.eu.org/ ，能不用就不用，减少因加速网导致的故障。
-  GH_PROXY='https://ghproxy.lvedong.eu.org/'
+  GH_PROXY=''
   GRPC_PROXY_PORT=443
   GRPC_PORT=5555
   WEB_PORT=80
@@ -98,6 +98,11 @@ EOF
 
 :$GRPC_PROXY_PORT {
   tls $WORK_DIR/nezha.pem $WORK_DIR/nezha.key
+
+  # 优先处理 /vl 路径，反代到 127.0.0.1:888
+  handle_path /vl* {
+    reverse_proxy 127.0.0.1:888
+  }
 
   reverse_proxy {
     to localhost:$GRPC_PORT
