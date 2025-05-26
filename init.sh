@@ -340,7 +340,8 @@ cat > $WORK_DIR/xconfig.json << EOF
         "decryption": "none",
         "fallbacks": [
           {
-            "dest": 443 // 默认回落到防探测的代理
+            "dest": $WEB_PORT,
+            "xver": 1
           }
         ]
       },
