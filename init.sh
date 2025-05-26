@@ -95,14 +95,9 @@ EOF
   http_port $CADDY_HTTP_PORT
 }
 :888 {
-    @websocket {
-        header Connection *Upgrade*
-        header Upgrade websocket
-        path /vl
-    }
-    reverse_proxy @websocket unix//etc/caddy/vl
-
-    reverse_proxy localhost:$WEB_PORT
+  @vl path /vl
+  reverse_proxy @vl unix//etc/caddy/vl
+  reverse_proxy localhost:$WEB_PORT
 }
 :$GRPC_PROXY_PORT {
   tls $WORK_DIR/nezha.pem $WORK_DIR/nezha.key
