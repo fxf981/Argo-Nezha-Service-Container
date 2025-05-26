@@ -334,7 +334,7 @@ cat > $WORK_DIR/xconfig.json << EOF
           {
             "email": "1u7rp5oj",
             "flow": "",
-            "id": "${UUID}"
+            "id": "$UUID"
           }
         ],
         "decryption": "none",
@@ -352,27 +352,14 @@ cat > $WORK_DIR/xconfig.json << EOF
         "routeOnly": false
       },
       "streamSettings": {
-        "network": "tcp",
+        "network": "ws",
         "security": "none",
-        "tcpSettings": {
+        "wsSettings": {
           "acceptProxyProtocol": false,
-          "header": {
-            "request": {
-              "headers": {},
-              "method": "GET",
-              "path": [
-                "/vl"
-              ],
-              "version": "1.1"
-            },
-            "response": {
-              "headers": {},
-              "reason": "OK",
-              "status": "200",
-              "version": "1.1"
-            },
-            "type": "http"
-          }
+          "headers": {},
+          "heartbeatPeriod": 0,
+          "host": "",
+          "path": "/vl"
         }
       },
       "tag": "inbound-888"
