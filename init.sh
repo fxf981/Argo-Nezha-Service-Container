@@ -338,7 +338,11 @@ cat > $WORK_DIR/xconfig.json << EOF
           }
         ],
         "decryption": "none",
-        "fallbacks": []
+        "fallbacks": [
+          {
+            "dest": 80 // 默认回落到防探测的代理
+          }
+        ]
       },
       "sniffing": {
         "destOverride": [
