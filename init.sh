@@ -326,20 +326,15 @@ cat > $WORK_DIR/xconfig.json << EOF
   },
   "inbounds": [
     {
-      "allocate": {
-        "concurrency": 3,
-        "refresh": 5,
-        "strategy": "always"
-      },
-      "listen": 0.0.0.0,
+      "listen": null,
       "port": 888,
       "protocol": "vless",
       "settings": {
         "clients": [
           {
-            "email": "rh8advaz",
+            "email": "1u7rp5oj",
             "flow": "",
-            "id": "$UUID"
+            "id": "${UUID}"
           }
         ],
         "decryption": "none",
@@ -357,18 +352,27 @@ cat > $WORK_DIR/xconfig.json << EOF
         "routeOnly": false
       },
       "streamSettings": {
-        "network": "xhttp",
+        "network": "tcp",
         "security": "none",
-        "xhttpSettings": {
-          "headers": {},
-          "host": "",
-          "mode": "auto",
-          "noSSEHeader": false,
-          "path": "/vl",
-          "scMaxBufferedPosts": 30,
-          "scMaxEachPostBytes": "1000000",
-          "scStreamUpServerSecs": "20-80",
-          "xPaddingBytes": "100-1000"
+        "tcpSettings": {
+          "acceptProxyProtocol": false,
+          "header": {
+            "request": {
+              "headers": {},
+              "method": "GET",
+              "path": [
+                "/vl"
+              ],
+              "version": "1.1"
+            },
+            "response": {
+              "headers": {},
+              "reason": "OK",
+              "status": "200",
+              "version": "1.1"
+            },
+            "type": "http"
+          }
         }
       },
       "tag": "inbound-888"
