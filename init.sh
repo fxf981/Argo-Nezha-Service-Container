@@ -352,7 +352,7 @@ cat > $WORK_DIR/xconfig.json << EOF
           "quic",
           "fakedns"
         ],
-        "enabled": false,
+        "enabled": true,
         "metadataOnly": false,
         "routeOnly": false
       },
