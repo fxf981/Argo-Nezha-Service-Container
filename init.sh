@@ -326,7 +326,7 @@ cat > $WORK_DIR/xconfig.json << EOF
   },
   "inbounds": [
     {
-      "listen": null,
+      "listen": "0.0.0.0",
       "port": 888,
       "protocol": "vless",
       "settings": {
@@ -340,7 +340,7 @@ cat > $WORK_DIR/xconfig.json << EOF
         "decryption": "none",
         "fallbacks": [
           {
-            "dest": $WEB_PORT,
+            "dest": "127.0.0.1:$WEB_PORT",
             "xver": 1
           }
         ]
