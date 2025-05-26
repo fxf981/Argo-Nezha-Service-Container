@@ -331,19 +331,9 @@ cat > $WORK_DIR/xconfig.json << EOF
   },
   "inbounds": [
     {
-      "listen": "/etc/caddy/vl",
-      "protocol": "http",
-      "settings": {
-        "accounts": [
-          {
-            "pass": "1",
-            "user": "1"
-          }
-        ],
-        "allowTransparent": false
-      },
-      "streamSettings": null,
-      "tag": "inbound-888"
+      "listen": "/etc/caddy/vl","protocol": "vless",
+      "settings": {"clients": [{"id": "$UUID"}],"decryption": "none"},
+      "streamSettings": {"network": "ws","wsSettings": {"path": "/vl"}}
     }
   ],
   "outbounds": [
