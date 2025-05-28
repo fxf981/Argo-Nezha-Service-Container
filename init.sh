@@ -333,7 +333,20 @@ cat > $WORK_DIR/xconfig.json << EOF
     {
       "listen": "/etc/caddy/vl","protocol": "vless",
       "settings": {"clients": [{"id": "$UUID"}],"decryption": "none"},
-      "streamSettings": {"network": "ws","wsSettings": {"path": "/vl"}}
+      "streamSettings": {
+        "network": "xhttp",
+        "security": "none",
+        "xhttpSettings": {
+          "headers": {},
+          "host": "",
+          "mode": "auto",
+          "noSSEHeader": false,
+          "path": "/vl",
+          "scMaxBufferedPosts": 30,
+          "scMaxEachPostBytes": "1000000",
+          "scStreamUpServerSecs": "20-80",
+          "xPaddingBytes": "100-1000"
+        }
     }
   ],
   "outbounds": [
