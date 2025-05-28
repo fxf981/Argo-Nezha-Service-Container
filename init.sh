@@ -96,11 +96,7 @@ EOF
 }
 :888 {
   @vl path /vl
-  reverse_proxy @vl unix//etc/caddy/vl {
-    transport http {
-      versions h2c
-    }
-  }
+  reverse_proxy @vl unix//etc/caddy/vl
   reverse_proxy localhost:$WEB_PORT
 }
 :$GRPC_PROXY_PORT {
@@ -337,21 +333,8 @@ cat > $WORK_DIR/xconfig.json << EOF
     {
       "listen": "/etc/caddy/vl",
       "protocol": "vless",
-      "settings": {
-        "clients": [
-          {
-            "id": "$UUID"
-          }
-        ],
-        "decryption": "none"
-      },
-      "streamSettings": {
-        "security": "none",
-        "network": "h2",
-        "httpSettings": {
-          "path": "/vl"
-        }
-      }
+      "settings": {"clients": [{"id": "$UUID"}],"decryption": "none"},
+      "streamSettings": {"network": "ws","wsSettings": {"path": "/vl"}}
     }
   ],
   "outbounds": [
