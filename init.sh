@@ -96,7 +96,11 @@ EOF
 }
 :888 {
   @vl path /vl
-  reverse_proxy @vl unix//etc/caddy/vl
+  reverse_proxy @vl unix//etc/caddy/vl {
+    transport http {
+      versions h2c
+    }
+  }
   reverse_proxy localhost:$WEB_PORT
 }
 :$GRPC_PROXY_PORT {
@@ -342,18 +346,10 @@ cat > $WORK_DIR/xconfig.json << EOF
         "decryption": "none"
       },
       "streamSettings": {
-        "network": "xhttp",
         "security": "none",
-        "xhttpSettings": {
-          "headers": {},
-          "host": "",
-          "mode": "auto",
-          "noSSEHeader": false,
-          "path": "/vl",
-          "scMaxBufferedPosts": 30,
-          "scMaxEachPostBytes": "1000000",
-          "scStreamUpServerSecs": "20-80",
-          "xPaddingBytes": "100-1000"
+        "network": "h2",
+        "httpSettings": {
+          "path": "/vl"
         }
       }
     }
