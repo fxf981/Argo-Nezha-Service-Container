@@ -331,8 +331,16 @@ cat > $WORK_DIR/xconfig.json << EOF
   },
   "inbounds": [
     {
-      "listen": "/etc/caddy/vl","protocol": "vless",
-      "settings": {"clients": [{"id": "$UUID"}],"decryption": "none"},
+      "listen": "/etc/caddy/vl",
+      "protocol": "vless",
+      "settings": {
+        "clients": [
+          {
+            "id": "$UUID"
+          }
+        ],
+        "decryption": "none"
+      },
       "streamSettings": {
         "network": "xhttp",
         "security": "none",
@@ -347,6 +355,7 @@ cat > $WORK_DIR/xconfig.json << EOF
           "scStreamUpServerSecs": "20-80",
           "xPaddingBytes": "100-1000"
         }
+      }
     }
   ],
   "outbounds": [
