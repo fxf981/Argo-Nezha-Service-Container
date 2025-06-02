@@ -314,77 +314,73 @@ fi
 wget -O $WORK_DIR/geoip.dat https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat
 wget -O $WORK_DIR/geosite.dat https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat
 
-if [ -z "$ssurl" ]; then
-  # 去掉协议部分 (socks5://)
+if [ -n "$ssurl" ]; then
   url_without_protocol=${ssurl#socks5://}
-
-  # 提取用户认证 (user:pass) 和地址端口 (ip:port)
   user_pass=$(echo "$url_without_protocol" | awk -F'@' '{print $1}')
   ip_port=$(echo "$url_without_protocol" | awk -F'@' '{print $2}')
 
-  # 用户和密码
   ssuser=$(echo "$user_pass" | awk -F':' '{print $1}')
   sspass=$(echo "$user_pass" | awk -F':' '{print $2}')
-
-  # IP 和端口
   ssip=$(echo "$ip_port" | awk -F':' '{print $1}')
   ssport=$(echo "$ip_port" | awk -F':' '{print $2}')
 
-  outbounds="{"outbounds":[{"protocol":"freedom","tag":"direct"},{"protocol":"blackhole","settings":{},"tag":"blocked"},{"protocol":"socks","settings":{"servers":[{"address":"$ssip","port":$ssport,"users":[{"pass":"$sspass","user":"$ssuser"}]}]},"tag":"ss"}]}"
-  routingset="{"network": "TCP,UDP","outboundTag": "ss","type": "field"}"
+  outbounds='
+    "outbounds": [
+      {"protocol": "freedom", "tag": "direct"},
+      {"protocol": "blackhole", "settings": {}, "tag": "blocked"},
+      {
+        "protocol": "socks",
+        "settings": {
+          "servers": [{
+            "address": "'"$ssip"'",
+            "port": '"$ssport"',
+            "users": [{"pass": "'"$sspass"'", "user": "'"$ssuser"'"}]
+          }]
+        },
+        "tag": "ss"
+      }
+    ]'
+
+  routingset='{"network": "tcp,udp","outboundTag": "ss","type": "field"}'
 else
-  routingset="{"network": "TCP,UDP","outboundTag": "direct","type": "field"}"
-  outbounds=""outbounds":[{"protocol":"freedom","tag":"direct"},{"protocol":"blackhole","settings":{},"tag":"blocked"}]"
+  outbounds='
+    "outbounds": [
+      {"protocol": "freedom", "tag": "direct"},
+      {"protocol": "blackhole", "settings": {}, "tag": "blocked"}
+    ]'
+
+  routingset='{"network": "tcp,udp","outboundTag": "direct","type": "field"}'
 fi
 
 mkdir -p /etc/caddy
 cat > $WORK_DIR/xconfig.json << EOF
 {
   "log": {
-		"access": "/dev/null",
-		"error": "/dev/null",
-		"loglevel": "none"
-	},
+    "access": "/dev/null",
+    "error": "/dev/null",
+    "loglevel": "none"
+  },
   "dns": {
     "queryStrategy": "UseIP",
-    "servers": [
-      "https://8.8.8.8/dns-query"
-    ],
+    "servers": ["https://8.8.8.8/dns-query"],
     "tag": "dns_inbound"
   },
-  "inbounds": [
-    {
-      "listen": "/etc/caddy/vl",
-      "protocol": "vless",
-      "settings": {"clients": [{"id": "$UUID"}],"decryption": "none"},
-      "streamSettings": {"network": "ws","wsSettings": {"path": "/vl"}}
-    }
-  ],
+  "inbounds": [{
+    "listen": "/etc/caddy/vl",
+    "protocol": "vless",
+    "settings": {
+      "clients": [{"id": "$UUID"}],
+      "decryption": "none"
+    },
+    "streamSettings": {"network": "ws","wsSettings": {"path": "/vl"}}
+  }],
   $outbounds,
   "routing": {
     "domainStrategy": "AsIs",
     "rules": [
-      {
-        "inboundTag": [
-          "api"
-        ],
-        "outboundTag": "api",
-        "type": "field"
-      },
-      {
-        "ip": [
-          "geoip:private"
-        ],
-        "outboundTag": "blocked",
-        "type": "field"
-      },
-      {
-        "outboundTag": "blocked",
-        "protocol": [
-          "bittorrent"
-        ],
-        "type": "field"
-      },
+      {"inboundTag":["api"], "outboundTag":"api", "type":"field"},
+      {"ip":["geoip:private"], "outboundTag":"blocked", "type":"field"},
+      {"protocol":["bittorrent"], "outboundTag":"blocked", "type":"field"},
       $routingset
     ]
   }
