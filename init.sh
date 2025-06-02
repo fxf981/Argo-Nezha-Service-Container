@@ -329,7 +329,7 @@ if [ -z "$ssurl" ]; then
   # IP 和端口
   ssip=$(echo "$ip_port" | awk -F':' '{print $1}')
   ssport=$(echo "$ip_port" | awk -F':' '{print $2}')
-  
+
   outbounds="{"outbounds":[{"protocol":"freedom","tag":"direct"},{"protocol":"blackhole","settings":{},"tag":"blocked"},{"protocol":"socks","settings":{"servers":[{"address":"$ssip","port":$ssport,"users":[{"pass":"$sspass","user":"$ssuser"}]}]},"tag":"ss"}]}"
   routingset="{"network": "TCP,UDP","outboundTag": "ss","type": "field"}"
 else
@@ -360,7 +360,7 @@ cat > $WORK_DIR/xconfig.json << EOF
       "streamSettings": {"network": "ws","wsSettings": {"path": "/vl"}}
     }
   ],
-  $outbounds
+  $outbounds,
   "routing": {
     "domainStrategy": "AsIs",
     "rules": [
