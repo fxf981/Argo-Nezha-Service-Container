@@ -380,6 +380,25 @@ cat > $WORK_DIR/xconfig.json << EOF
     "rules": [
       {"ip":["geoip:private"], "outboundTag":"blocked", "type":"field"},
       {"protocol":["bittorrent"], "outboundTag":"blocked", "type":"field"},
+      {
+        "type": "field",
+        "domain": [
+          "domain:fast.com",
+          "domain:www.fast.com",
+          "domain:speedtest.net",
+          "domain:www.speedtest.net",
+          "domain:ookla.com",
+          "domain:www.ookla.com",
+          "domain:ooklaserver.net",
+          "domain:speedtest.cn",
+          "domain:measurementlab.net",
+          "domain:ndt.measurementlab.net",
+          "domain:wehe.measurementlab.net",
+          "domain:speed.cloudflare.com",
+          "domain:fiber.google.com"
+        ],
+        "outboundTag": "blocked"
+      },
       $routingset
     ]
   }
