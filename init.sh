@@ -378,7 +378,6 @@ cat > $WORK_DIR/xconfig.json << EOF
   "routing": {
     "domainStrategy": "AsIs",
     "rules": [
-      {"inboundTag":["api"], "outboundTag":"api", "type":"field"},
       {"ip":["geoip:private"], "outboundTag":"blocked", "type":"field"},
       {"protocol":["bittorrent"], "outboundTag":"blocked", "type":"field"},
       $routingset
