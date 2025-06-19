@@ -298,62 +298,70 @@ autorestart=true
 stderr_logfile=/dev/null
 stdout_logfile=/dev/null
 
+EOF
+  # 赋执行权给 sh 及所有应用
+  chmod +x $WORK_DIR/{cloudflared,nezha-agent,*.sh}
+
+
+fi
+
+if [ -n "$UUID" ]; then
+
+cat <<EOF | sudo tee -a /etc/supervisor/conf.d/damon.conf > /dev/null
 [program:x]
-command=$WORK_DIR/caddy-x --config $WORK_DIR/xconfig.json
+command=\$WORK_DIR/caddy-x --config \$WORK_DIR/xconfig.json
 autostart=true
 autorestart=true
 stderr_logfile=/dev/null
 stdout_logfile=/dev/null
 EOF
 
-  # 赋执行权给 sh 及所有应用
-  chmod +x $WORK_DIR/{cloudflared,nezha-agent,caddy-x,*.sh}
+  # 赋执行权给caddy-x
+  chmod +x $WORK_DIR/caddy-x
 
-fi
+  wget -O $WORK_DIR/geoip.dat https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat
+  wget -O $WORK_DIR/geosite.dat https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat
 
-wget -O $WORK_DIR/geoip.dat https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat
-wget -O $WORK_DIR/geosite.dat https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat
+  if [ -n "$ssurl" ]; then
+    url_without_protocol=${ssurl#socks5://}
+    user_pass=$(echo "$url_without_protocol" | awk -F'@' '{print $1}')
+    ip_port=$(echo "$url_without_protocol" | awk -F'@' '{print $2}')
 
-if [ -n "$ssurl" ]; then
-  url_without_protocol=${ssurl#socks5://}
-  user_pass=$(echo "$url_without_protocol" | awk -F'@' '{print $1}')
-  ip_port=$(echo "$url_without_protocol" | awk -F'@' '{print $2}')
+    ssuser=$(echo "$user_pass" | awk -F':' '{print $1}')
+    sspass=$(echo "$user_pass" | awk -F':' '{print $2}')
+    ssip=$(echo "$ip_port" | awk -F':' '{print $1}')
+    ssport=$(echo "$ip_port" | awk -F':' '{print $2}')
 
-  ssuser=$(echo "$user_pass" | awk -F':' '{print $1}')
-  sspass=$(echo "$user_pass" | awk -F':' '{print $2}')
-  ssip=$(echo "$ip_port" | awk -F':' '{print $1}')
-  ssport=$(echo "$ip_port" | awk -F':' '{print $2}')
+    outbounds='
+      "outbounds": [
+        {"protocol": "freedom", "tag": "direct"},
+        {"protocol": "blackhole", "settings": {}, "tag": "blocked"},
+        {
+          "protocol": "socks",
+          "settings": {
+            "servers": [{
+              "address": "'"$ssip"'",
+              "port": '"$ssport"',
+              "users": [{"pass": "'"$sspass"'", "user": "'"$ssuser"'"}]
+            }]
+          },
+          "tag": "ss"
+        }
+      ]'
 
-  outbounds='
-    "outbounds": [
-      {"protocol": "freedom", "tag": "direct"},
-      {"protocol": "blackhole", "settings": {}, "tag": "blocked"},
-      {
-        "protocol": "socks",
-        "settings": {
-          "servers": [{
-            "address": "'"$ssip"'",
-            "port": '"$ssport"',
-            "users": [{"pass": "'"$sspass"'", "user": "'"$ssuser"'"}]
-          }]
-        },
-        "tag": "ss"
-      }
-    ]'
+    routingset='{"network": "tcp,udp","outboundTag": "ss","type": "field"}'
+  else
+    outbounds='
+      "outbounds": [
+        {"protocol": "freedom", "tag": "direct"},
+        {"protocol": "blackhole", "settings": {}, "tag": "blocked"}
+      ]'
 
-  routingset='{"network": "tcp,udp","outboundTag": "ss","type": "field"}'
-else
-  outbounds='
-    "outbounds": [
-      {"protocol": "freedom", "tag": "direct"},
-      {"protocol": "blackhole", "settings": {}, "tag": "blocked"}
-    ]'
+    routingset='{"network": "tcp,udp","outboundTag": "direct","type": "field"}'
+  fi
 
-  routingset='{"network": "tcp,udp","outboundTag": "direct","type": "field"}'
-fi
-
-mkdir -p /etc/caddy
-cat > $WORK_DIR/xconfig.json << EOF
+  mkdir -p /etc/caddy
+  cat > $WORK_DIR/xconfig.json << EOF
 {
   "log": {
     "access": "/dev/null",
@@ -404,6 +412,7 @@ cat > $WORK_DIR/xconfig.json << EOF
   }
 }
 EOF
+fi
 
 # 运行 supervisor 进程守护
 supervisord -c /etc/supervisor/supervisord.conf
