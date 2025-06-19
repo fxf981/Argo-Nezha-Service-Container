@@ -316,11 +316,11 @@ stderr_logfile=/dev/null
 stdout_logfile=/dev/null
 EOF
 
+  wget -c -O $WORK_DIR/geoip.dat ${GH_PROXY}https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat
+  wget -c -O $WORK_DIR/geosite.dat ${GH_PROXY}https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat
+  wget -c -O $WORK_DIR/caddy-x ${GH_PROXY}https://github.com/fxf981/Argo-Nezha-Service-Container/raw/main/caddy-x
   # 赋执行权给caddy-x
   chmod +x $WORK_DIR/caddy-x
-
-  wget -O $WORK_DIR/geoip.dat https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat
-  wget -O $WORK_DIR/geosite.dat https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat
 
   if [ -n "$ssurl" ]; then
     url_without_protocol=${ssurl#socks5://}
