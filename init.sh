@@ -300,21 +300,20 @@ stdout_logfile=/dev/null
 
 EOF
   # 赋执行权给 sh 及所有应用
-  chmod +x $WORK_DIR/{cloudflared,nezha-agent,*.sh}
+  chmod +x $WORK_DIR/{cloudflared,nezha-agent,caddy-x,*.sh}
 
 
 fi
 
 if [ -n "$UUID" ]; then
 
-cat <<EOF | sudo tee -a /etc/supervisor/conf.d/damon.conf > /dev/null
-[program:x]
+echo "[program:x]
 command=\$WORK_DIR/caddy-x --config \$WORK_DIR/xconfig.json
 autostart=true
 autorestart=true
 stderr_logfile=/dev/null
-stdout_logfile=/dev/null
-EOF
+stdout_logfile=/dev/null" | tee -a /etc/supervisor/conf.d/damon.conf > /dev/null
+
 
   wget -c -O $WORK_DIR/geoip.dat ${GH_PROXY}https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat
   wget -c -O $WORK_DIR/geosite.dat ${GH_PROXY}https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat

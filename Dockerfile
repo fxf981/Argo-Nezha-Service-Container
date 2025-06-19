@@ -2,7 +2,7 @@ FROM debian
 
 WORKDIR /dashboard
 
-COPY caddy-x caddy-x
+# COPY caddy-x caddy-x
 
 RUN apt-get update &&\
     apt-get -y install openssh-server wget iproute2 vim git cron unzip supervisor nginx sqlite3 curl net-tools htop btop &&\
