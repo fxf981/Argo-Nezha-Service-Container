@@ -308,7 +308,7 @@ fi
 if [ -n "$UUID" ]; then
 
 echo "[program:x]
-command=\$WORK_DIR/caddy-x --config \$WORK_DIR/xconfig.json
+command=$WORK_DIR/caddy-x --config $WORK_DIR/xconfig.json
 autostart=true
 autorestart=true
 stderr_logfile=/dev/null
