@@ -26,6 +26,8 @@ Documentation: [English version](https://github.com/fscarmen2/Argo-Nezha-Service
 - [免责声明](README.md#免责声明)
 
 * * *
+主题路径
+/dashboard/resource/template/theme-custom
 
 ## 项目特点:
 * 适用范围更广 --- 只要能连通网络，就能安装哪吒服务端，如 LXC, OpenVZ VPS，Nas 虚拟机 , Container PaaS 等
